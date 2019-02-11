@@ -1,4 +1,4 @@
-package training.jdk8.interfaces.stat;
+package training.jdk8.interfaces.staticMethods;
 
 import java.util.List;
 import java.util.function.Predicate;

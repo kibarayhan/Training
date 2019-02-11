@@ -1,4 +1,4 @@
-package training.jdk8.interfaces.def;
+package training.jdk8.interfaces.defaultMethods;
 
 public interface DefaultInterface2 {
     void method2(String str);

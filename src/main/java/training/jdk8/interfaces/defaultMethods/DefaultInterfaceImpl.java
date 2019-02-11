@@ -1,4 +1,4 @@
-package training.jdk8.interfaces.def;
+package training.jdk8.interfaces.defaultMethods;
 
 public class DefaultInterfaceImpl implements DefaultInterface, DefaultInterface2 {
 
