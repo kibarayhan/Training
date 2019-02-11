@@ -1,4 +1,4 @@
-package training.j8interface.stat;
+package training.jdk8.interfaces.stat;
 
 public interface StaticInterface {
 

@@ -1,6 +1,7 @@
-package training.j8interface.stat;
+package training.jdk8.interfaces.stat;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class StaticInterfaceImpl implements StaticInterface {
@@ -25,6 +26,7 @@ public class StaticInterfaceImpl implements StaticInterface {
 
 
     public static int sumOfIntegersGreaterthan10(List<Integer> integerList) {
-        return integerList.parallelStream().filter(i -> i > 10).mapToInt(i -> i).sum();
+        Predicate<Integer> greateThen10 = i -> i > 10;
+        return integerList.parallelStream().filter(greateThen10).mapToInt(i -> i).sum();
     }
 }
