@@ -1,18 +1,9 @@
 package training.jdk8.lambdas;
 
-
-import org.jetbrains.annotations.NotNull;
-
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class LambdaExpression {
 

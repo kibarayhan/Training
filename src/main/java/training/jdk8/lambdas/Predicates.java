@@ -1,7 +1,5 @@
 package training.jdk8.lambdas;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,7 +31,7 @@ public class Predicates {
         boolean test(T input);
     }
 
-    public static <T> Collection<T> myFilter (MyPredicate<T> predicate, @NotNull Collection<T> items){
+    public static <T> Collection<T> myFilter (MyPredicate<T> predicate, Collection<T> items){
         Collection<T> filteredItems = new ArrayList<T>();
         for (T item: items){
             if (predicate.test(item)){
