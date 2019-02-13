@@ -24,6 +24,8 @@ public class Lambdas {
 
 		//
 		values.forEach(e -> System.out.println(String.format("using lambda %d", e)));
+		
+		values.forEach(System.out::println);
 		//
 		values.forEach(e -> {
 			System.out.println(String.format("using lambda %d", e));

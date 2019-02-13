@@ -6,10 +6,11 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 /*
-    We need a function for checking a condition.
-    A Predicate is one such function accepting a single argument to evaluate to a boolean result.
-    It has a single method test which returns the boolean value
-
+ * (t) -> true/false;
+ * A Predicate returns true or false. These are used for filters or replacing big chains of if/else logic.
+ * We need a function for checking a condition. 
+ * A Predicate is one such function accepting a single argument to evaluate to a boolean result.
+ * It has a single method test which returns the boolean value
  */
 public class Predicates {
 

@@ -4,9 +4,13 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /*
-The Consumer accepts a single argument but does not return any result.
-This is mostly used to perform operations on the arguments such as
-persisting the employees, invoking house keeping operations, emailing newsletters etc.
+ * (T) -> (NA)
+ * The Consumer accepts a single argument but does not return any result.
+ * Consumers are where mutating functions, things with side-effects, should go. 
+ * Consumers finish things
+  
+ * This is mostly used to perform operations on the arguments such as
+ * persisting the employees, invoking house keeping operations, emailing newsletters etc.
 */
 public class Consumers {
 
