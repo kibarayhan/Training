@@ -12,10 +12,10 @@ public class FunctionalInterfaces {
 	}
 	
 	public FunctionalInterfaces(){
-		Predicate isPolindrome = s -> s.equals(s); 
-		Predicate isPolindrome2 = s -> {
-//			if (s.toString().re)
-			return s.equals(s); 
+		Predicate<String> isPolindrome = s -> new StringBuilder(s).reverse().toString().equalsIgnoreCase(s); 
+		Predicate<String> isPolindrome2 = s -> {
+			StringBuilder sb = new StringBuilder(s);
+			return sb.reverse().toString().equalsIgnoreCase(s);
 		};
 	}
 	
