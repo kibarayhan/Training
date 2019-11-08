@@ -42,16 +42,16 @@ public class Person {
 	// intention is to change the default implementation.
 	@Override
 	public boolean equals(Object obj) {
-		// Step 1: Check if the ’obj’ is null
+		// Step 1: Check if the "obj" is null
 		if (obj == null)
 			return false;
 		
-		// Step 2: Check if the ’obj’ is pointing to the this instance
+		// Step 2: Check if the "obj" is pointing to the this instance
 		if (this == obj)
 			return true;
 		
 		// Step 3: Check classes equality. Note of caution here: please do not use the
-		// ’instanceof’ operator unless class is declared as final. It may cause
+		// "instanceof" operator unless class is declared as final. It may cause
 		// an issues within class hierarchies.
 		if (getClass() != obj.getClass())
 			return false;

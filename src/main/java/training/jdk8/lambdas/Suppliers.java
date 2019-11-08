@@ -20,7 +20,7 @@ public class Suppliers {
 
 	public static void main(String[] args) {
 
-		List<String> names = Arrays.asList("Mal", "Wash", "Kaylee", "Inara", "Zoë", "Jayne", "Simon", "River",
+		List<String> names = Arrays.asList("Mal", "Wash", "Kaylee", "Inara", "Zoe", "Jayne", "Simon", "River",
 				"Shepherd Book");
 		Optional<String> startWithC = names.stream().filter(name->name.startsWith("C")).findFirst();
 		// Prints Optional.empty

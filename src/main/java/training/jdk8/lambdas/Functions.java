@@ -23,7 +23,7 @@ public class Functions {
 	public static void main(String[] args) {
 		sampleFunctions();
 
-		List<String> names = Arrays.asList("Mal", "Wash", "Kaylee", "Inara", "Zoë", "Jayne", "Simon", "River",
+		List<String> names = Arrays.asList("Mal", "Wash", "Kaylee", "Inara", "Zoo", "Jayne", "Simon", "River",
 				"Shepherd Book");
 
 		lengthOfStrings(names);

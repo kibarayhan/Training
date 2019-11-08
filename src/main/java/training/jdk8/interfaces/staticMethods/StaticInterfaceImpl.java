@@ -6,10 +6,10 @@ import java.util.stream.IntStream;
 
 /*
  * The key points to remember are:
-	• Static methods must have an implementation
-	• You cannot override a static method
-	• Call static methods from the interface name
-	• You do not need to implement an interface to use its static methods
+	- Static methods must have an implementation
+	- You cannot override a static method
+	- Call static methods from the interface name
+	- You do not need to implement an interface to use its static methods
  */
 public class StaticInterfaceImpl implements StaticInterface {
 
