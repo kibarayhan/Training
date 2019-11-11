@@ -80,15 +80,7 @@ public class MyPriorityQueue {
 				if (items[left] <= items[i]) break;
 				swapItems(i, left);
 				i = left;
-				
 			}
-//			if (items[i] < items[left]) {
-//				swapItems(i, left);
-//			}
-//			if (items[left] < items[right]) {
-//				swapItems(left, right);
-//			}
-//			i = left;
 		}
 
 		size--;
