@@ -6,17 +6,6 @@ import org.junit.Test;
 public class SortTest {
 
 	@Test
-	public void whenSortedWithBubbleSort_thenGotSortedArray() {
-		int[] unsortedArray = {2, 1, 4, 6, 3, 5};
-		int[] sortedArray = {1,2,3,4,5,6};
-		BubbleSort bubbleSort = new BubbleSort();
-		bubbleSort.bubbleSort(unsortedArray);
-		
-		Assert.assertArrayEquals(unsortedArray, sortedArray);
-	}
-	
-	
-	@Test
 	public void whenSortedWithSelectionSort_thenGotSortedArray() {
 		int[] unsortedArray = {2, 1, 4, 6, 3, 5};
 		int[] sortedArray = {1,2,3,4,5,6};
@@ -45,5 +34,47 @@ public class SortTest {
 		
 		Assert.assertArrayEquals(unsortedArray, sortedArray);
 	}
+
+	@Test
+	public void whenSortedWithBubbleSort_thenGotSortedArray() {
+		int[] unsortedArray = {2, 1, 4, 6, 3, 5};
+		int[] sortedArray = {1,2,3,4,5,6};
+		BubbleSort bubbleSort = new BubbleSort();
+		bubbleSort.bubbleSort(unsortedArray);
+
+		Assert.assertArrayEquals(unsortedArray, sortedArray);
+	}
+
+	@Test
+	public void whenSortedWithMergeSort_thenGotSortedArray(){
+		int[] unsortedArray = {2, 1, 4, 6, 3, 5};
+		int[] sortedArray = {1,2,3,4,5,6};
+		MergeSort mergeSort = new MergeSort();
+		mergeSort.mergeSort(unsortedArray, unsortedArray.length);
+
+		Assert.assertArrayEquals(unsortedArray, sortedArray);
+	}
+
+	@Test
+	public void whenSortedWithQuickSort_thenGotSortedArray(){
+		int[] unsortedArray = {2, 1, 4, 6, 3, 5};
+		int[] sortedArray = {1,2,3,4,5,6};
+		QuickSort quickSort = new QuickSort();
+		quickSort.quickSort(unsortedArray, 0, unsortedArray.length - 1);
+
+		Assert.assertArrayEquals(unsortedArray, sortedArray);
+	}
+
+
+	@Test
+	public void whenSortedWithHeapSortArrayImpl_thenGotSortedArray(){
+		int[] unsortedArray = {2, 1, 4, 6, 3, 5};
+		int[] sortedArray = {1,2,3,4,5,6};
+		unsortedArray = HeapSortArrayImpl.sort(unsortedArray);
+
+		Assert.assertArrayEquals(unsortedArray, sortedArray);
+
+	}
+
 
 }
