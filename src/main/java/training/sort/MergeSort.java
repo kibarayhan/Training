@@ -48,22 +48,22 @@ public class MergeSort {
 	}
 
 	private void merge(int[] items, int[] left, int[] right) {
-		int i = 0, j = 0, k =0;
+		int l = 0, r = 0, i =0;
 		
-		while (i < left.length && j < right.length){
-			if (left[i] <= right[j]) {
-				items[k++] = left[i++];
+		while (l < left.length && r < right.length){
+			if (left[l] <= right[r]) {
+				items[i++] = left[l++];
 			}else {
-				items[k++] = right[j++];
+				items[i++] = right[r++];
 			}
 		}
 
-		while (i < left.length){
-			items[k++] = left[i++];
+		while (l < left.length){
+			items[i++] = left[l++];
 		}
 
-		while (j < right.length){
-			items[k++] = right[j++];
+		while (r < right.length){
+			items[i++] = right[r++];
 		}
 	}
 
