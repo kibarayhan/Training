@@ -30,44 +30,61 @@ public class Person {
 		return String.format("%s [name = %s]", getClass().getSimpleName(), getName());
 	}
 
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(name);
+//	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		int hash = 1;
+		hash = hash*31 + ((name == null) ? 0 : name.hashCode());
+		return hash;
 	}
-	
-	// Step 0: Please add the @Override annotation, it will ensure that your
-	// intention is to change the default implementation.
+
 	@Override
 	public boolean equals(Object obj) {
-		// Step 1: Check if the "obj" is null
-		if (obj == null)
-			return false;
-		
-		// Step 2: Check if the "obj" is pointing to the this instance
 		if (this == obj)
 			return true;
-		
-		// Step 3: Check classes equality. Note of caution here: please do not use the
-		// "instanceof" operator unless class is declared as final. It may cause
-		// an issues within class hierarchies.
+		if (obj == null)
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		
-		// Step 4: Check individual fields equality
 		Person other = (Person) obj;
-		if (!Objects.equals(name, other.getName())) {
-			return false;
-		}
-//		if (name == null) {
-//			if (other.name != null)
-//				return false;
-//		} else if (!name.equals(other.name))
-//			return false;
-		return true;
+		return Objects.equals(name, other.name);
 	}
+
+	
+//	// Step 0: Please add the @Override annotation, it will ensure that your
+//	// intention is to change the default implementation.
+//	@Override
+//	public boolean equals(Object obj) {
+//	// Step 1: Check if the "obj" is pointing to the this instance
+//		if (this == obj)
+//			return true;
+//	
+//		// Step 2: Check if the "obj" is null
+//		if (obj == null)
+//			return false;
+//		
+//		// Step 3: Check classes equality. Note of caution here: please do not use the
+//		// "instanceof" operator unless class is declared as final. It may cause
+//		// an issues within class hierarchies.
+//		if (getClass() != obj.getClass())
+//			return false;
+//		
+//		// Step 4: Check individual fields equality
+//		Person other = (Person) obj;
+//		if (!Objects.equals(name, other.getName())) {
+//			return false;
+//		}
+////		if (name == null) {
+////			if (other.name != null)
+////				return false;
+////		} else if (!name.equals(other.name))
+////			return false;
+//		return true;
+//	}
 	
 	
 

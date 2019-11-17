@@ -1,4 +1,4 @@
-package training.jdk8.streams;
+package training.jdk8.streams.cases;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,8 +20,8 @@ public class FindBestRoute {
      * Iterate through each line of input.
      */
     public static void main(String[] args) throws IOException {
-        InputStreamReader reader = new InputStreamReader(System.in, StandardCharsets.UTF_8);
-        BufferedReader in = new BufferedReader(reader);
+//        InputStreamReader reader = new InputStreamReader(System.in, StandardCharsets.UTF_8);
+//        BufferedReader in = new BufferedReader(reader);
 //    String line = "Rkbs,5453; Wdqiz,1245; Rwds,3890; Ujma,5589; Tbzmo,1303;";
         String line = "Vgdfz,70; Mgknxpi,3958; Nsptghk,2626; Wuzp,2559; Jcdwi,3761;";
 //    while ((line = in.readLine()) != null) {
@@ -34,7 +34,7 @@ public class FindBestRoute {
                 .collect(Collectors.toMap(a -> a[0], a -> Long.valueOf(a[1])));
 
         Map<String, Long> sortedByValue = route.entrySet().stream().sorted(Map.Entry.comparingByValue())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));               
 
         sortedByValue.values().forEach(System.out::println);
 

@@ -1,4 +1,4 @@
-package training.jdk8.streams;
+package training.jdk8.streams.cases;
 
 import java.io.BufferedReader;
 import java.io.IOException;

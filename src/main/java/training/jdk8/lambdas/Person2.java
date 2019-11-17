@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public class Person2 {
 	private final int id;
-	
 	private String name;
 	
 	public Person2 (Person2 person) {
@@ -29,15 +28,16 @@ public class Person2 {
 
 	@Override
 	public boolean equals(Object obj) {
-		// 1. check null reference
+		//1. check references
+		if (this == obj) {
+			return true;
+		}
+
+		// 2. check null reference
 		if (obj == null) {
 			return false;
 		}
 		
-		//2. check references
-		if (this == obj) {
-			return true;
-		}
 		
 		// 3. check types
 		if (getClass() != obj.getClass()){

@@ -3,6 +3,7 @@ package training.jdk8.lambdas;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 import java.util.stream.Collectors;
 
 /*
@@ -20,6 +21,22 @@ public class Suppliers {
 
 	public static void main(String[] args) {
 
+		// Anonymous inner class
+		DoubleSupplier randomSupplier = new DoubleSupplier() {
+			@Override
+			public double getAsDouble() {
+				return Math.random();
+			}
+		};
+
+		// Lambda expression
+		randomSupplier = () -> Math.random();
+
+		// Method reference
+		randomSupplier = Math::random;
+
+		System.out.println(randomSupplier.getAsDouble());		
+		
 		List<String> names = Arrays.asList("Mal", "Wash", "Kaylee", "Inara", "Zoe", "Jayne", "Simon", "River",
 				"Shepherd Book");
 		Optional<String> startWithC = names.stream().filter(name->name.startsWith("C")).findFirst();

@@ -15,7 +15,6 @@ public class StaticInterfaceImpl implements StaticInterface {
 
     public boolean isNull(String str) {
         System.out.println("Impl Null Check");
-
         return str == null ? true : false;
     }
 
@@ -23,6 +22,7 @@ public class StaticInterfaceImpl implements StaticInterface {
         StaticInterfaceImpl impl = new StaticInterfaceImpl();
         impl.print("");
         impl.isNull("test");
+        StaticInterface.isNull("test2");
     }
 
     private static boolean isPrime(int number) {

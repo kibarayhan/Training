@@ -1,6 +1,7 @@
 package training.jdk8.streams.cases;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,20 +16,20 @@ public class FindMinUniqueNumber {
 		IntPredicate lessThan10 = (i) -> (0 < i && i < 10);
 		List<String> list1 = Arrays.asList(input.split(","));
 
-//		Map<Integer, Long> numbers = list1.stream()
-//			.mapToInt(s -> Integer.valueOf(s))
-//			.filter( lessThan10).boxed()
-//			.reduce(new HashMap<Integer, Long>(), (map, number) -> {
-//				if (! map.containsKey(number)) {
-//					map.put(number, 1L);
-//				}else {
-//					map.put(number, map.get(number) + 1L);
-//				}
-//				return map;
-//			}, (map1, map2) -> {
-//				map1.putAll(map2);
-//				return map1;
-//			});
+		Map<Integer, Long> numbers = list1.stream()
+			.mapToInt(s -> Integer.valueOf(s))
+			.filter( lessThan10).boxed()
+			.reduce(new HashMap<Integer, Long>(), (map, number) -> {
+				if (! map.containsKey(number)) {
+					map.put(number, 1L);
+				}else {
+					map.put(number, map.get(number) + 1L);
+				}
+				return map;
+			}, (map1, map2) -> {
+				map1.putAll(map2);
+				return map1;
+			});
 
 		Map<Integer, Long> counted = list1.stream().mapToInt(s -> Integer.valueOf(s)).filter(lessThan10).boxed()
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));

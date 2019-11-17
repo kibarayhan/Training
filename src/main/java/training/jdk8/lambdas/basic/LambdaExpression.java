@@ -1,4 +1,4 @@
-package training.jdk8.lambdas;
+package training.jdk8.lambdas.basic;
 
 import java.security.PrivilegedAction;
 import java.util.concurrent.Callable;

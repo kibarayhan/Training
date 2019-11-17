@@ -6,14 +6,14 @@ public class FunctionalInterfaces{
 		
 	}
 	
-	public class Test implements Functional1{
+	public class Test implements FunctionalInterface1{
 		@Override
 		public void method() {
 		}		
 	}
 	
 	@FunctionalInterface
-	interface Functional1 {
+	interface FunctionalInterface1 {
 		void method();
 	}
 

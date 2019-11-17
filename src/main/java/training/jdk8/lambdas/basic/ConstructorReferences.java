@@ -19,26 +19,6 @@ public class ConstructorReferences {
 		arraysUsage();
 	}
 
-	
-	
-	private static void arraysUsage() {
-		List<String> names = Arrays.asList("ayhan kibar", "ali deli", "veli meli");
-		Person[] people = names.stream().map(Person::new).toArray(Person[]::new);
-	}
-
-
-
-	private static void varargsConstructorUsage() {
-		List<String> names = Arrays.asList("ayhan kibar", "ali deli", "veli meli");
-		
-		List<Person> persons = names.stream()
-		.map(name -> name.split(" "))
-		.map(Person::new)
-		.collect(Collectors.toList());
-		System.out.println("");
-		persons.forEach(System.out::println);		
-	}
-	
 	private static void methodReferenceUsage1() {
 		List<String> names = Arrays.asList("ayhan", "ali", "veli");
 		List<Person> persons = names.stream().map(name -> new Person(name)).collect(Collectors.toList());
@@ -58,6 +38,22 @@ public class ConstructorReferences {
 		Person after2 = people.get(0);
 		assertFalse(before == after2);
 		assertTrue(before.equals(after2));
+	}
+	
+	private static void varargsConstructorUsage() {
+		List<String> names = Arrays.asList("ayhan kibar", "ali deli", "veli meli");
+		
+		List<Person> persons = names.stream()
+		.map(name -> name.split(" "))
+		.map(Person::new)
+		.collect(Collectors.toList());
+		System.out.println("");
+		persons.forEach(System.out::println);		
+	}
+
+	private static void arraysUsage() {
+		List<String> names = Arrays.asList("ayhan kibar", "ali deli", "veli meli");
+		Person[] people = names.stream().map(Person::new).toArray(Person[]::new);
 	}
 
 }

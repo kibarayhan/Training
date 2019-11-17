@@ -1,6 +1,7 @@
 package training.jdk8.lambdas.basic;
 
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /*
  * Create an interface with a single, abstract method, and add the @FunctionalInterface annotation.
@@ -8,15 +9,19 @@ import java.util.function.Predicate;
 public class FunctionalInterfaces {
 
 	public static void main(String[] args) {
-		
+		FunctionalInterfaces f = new FunctionalInterfaces();
+		f.predicateUSage();
 	}
 	
-	public FunctionalInterfaces(){
+	public void predicateUSage() {
 		Predicate<String> isPolindrome = s -> new StringBuilder(s).reverse().toString().equalsIgnoreCase(s); 
 		Predicate<String> isPolindrome2 = s -> {
 			StringBuilder sb = new StringBuilder(s);
-			return sb.reverse().toString().equalsIgnoreCase(s);
+			boolean result = sb.reverse().toString().equalsIgnoreCase(s);
+			return result;
 		};
+		Predicate<String> isPolindrome3 = s-> new PalindromeCheckerImpl().isPolindrome(s);		
+		Stream.of("TactCoa", "atcocta").filter(isPolindrome3).forEach(System.out::println);		
 	}
 	
 	@FunctionalInterface
@@ -25,11 +30,9 @@ public class FunctionalInterfaces {
 	}
 	
 	public class PalindromeCheckerImpl implements PalindromeChecker{
-
 		@Override
 		public boolean isPolindrome(String s) {
-//			if (s.)
-			return false;
+			return new StringBuilder(s).reverse().toString().equalsIgnoreCase(s);
 		}
 		
 	}
