@@ -5,14 +5,14 @@ import java.util.Arrays;
 /*
 https://www.baeldung.com/java-quicksort
 Quicksort is a sorting algorithm, which is leveraging the divide-and-conquer principle.
-It has an average O(n log n) complexity and it’s one of the most used sorting algorithms, especially for big data volumes.
+It has an average O(n log n) complexity and it&rsquo;s one of the most used sorting algorithms, especially for big data volumes.
 
 It's important to remember that Quicksort isn't a stable algorithm. A stable sorting algorithm is an algorithm where
 the elements with the same values appear in the same order in the sorted output as they appear in the input list.
 
 Algorithm steps:
 1. We choose an element from the list, called the pivot. We'll use it to divide the list into two sub-lists.
-2. We reorder all the elements around the pivot – the ones with smaller value are placed before it, and all the elements
+2. We reorder all the elements around the pivot &ndash; the ones with smaller value are placed before it, and all the elements
 greater than the pivot after it. After this step, the pivot is in its final position. This is the important partition step.
 3. We apply the above steps recursively to both sub-lists on the left and right of the pivot.\
 
@@ -22,10 +22,10 @@ divide the list into two equal sub-lists.
 n the best case, the algorithm will divide the list into two equal size sub-lists. So, the first iteration of the full
 n-sized list needs O(n). Sorting the remaining two sub-lists with n/2 elements takes 2*O(n/2) each. As a result, the
 QuickSort algorithm has the complexity of O(n log n).
-In the worst case, the algorithm will select only one element in each iteration, so O(n) + O(n-1) + … + O(1), which is
+In the worst case, the algorithm will select only one element in each iteration, so O(n) + O(n-1) + &hellip; + O(1), which is
 equal to O(n2).
 On the average QuickSort has O(n log n) complexity, making it suitable for big data volumes.
-It has an O(log(n)) space complexity and It’s generally an “in-place” algorithm.
+It has an O(log(n)) space complexity and It&rsquo;s generally an &ldquo;in-place&rdquo; algorithm.
 
 Although both Quicksort and Mergesort have an average time complexity of O(n log n), Quicksort is the preferred algorithm,
 as it has an O(log(n)) space complexity. Mergesort, on the other hand, requires O(n) extra storage, which makes it quite

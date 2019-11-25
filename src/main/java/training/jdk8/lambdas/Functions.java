@@ -1,12 +1,11 @@
 package training.jdk8.lambdas;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
@@ -70,9 +69,7 @@ public class Functions {
 		}).boxed().collect(Collectors.toList());
 
 		nameLengths = names.stream().mapToInt(s -> s.length()).boxed().collect(Collectors.toList());
-		assertEquals(nameLengths, Arrays.asList(3, 4, 6, 5, 3, 5, 5, 5, 13));
-		
-		
+
 		System.out.println("Total length of strings:" + nameLengths.stream().reduce(0, Integer::sum));		
 		
 	}
@@ -83,7 +80,7 @@ public class Functions {
 		};
 
 		Optional<String> namesAsAStr = names.stream().reduce(accumulator);
-		System.out.println(namesAsAStr.orElse("No names"));
+		System.out.println(namesAsAStr.orElseGet(()->"nothing"));
 
 		String namesAsString = names.stream().collect(Collectors.joining(","));
 		System.out.println(namesAsString);

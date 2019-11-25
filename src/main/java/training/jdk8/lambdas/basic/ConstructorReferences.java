@@ -1,7 +1,7 @@
 package training.jdk8.lambdas.basic;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+//import static org.junit.Assert.assertFalse;
+//import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,13 +31,13 @@ public class ConstructorReferences {
 		List<Person> people = Stream.of(before).collect(Collectors.toList());
 				
 		Person after1 = people.get(0);
-		assertTrue(before == after1);
-		assertTrue(before.equals(after1));
+//		assertTrue(before == after1);
+//		assertTrue(before.equals(after1));
 
 		people = Stream.of(before).map(Person::new).collect(Collectors.toList());
 		Person after2 = people.get(0);
-		assertFalse(before == after2);
-		assertTrue(before.equals(after2));
+//		assertFalse(before == after2);
+//		assertTrue(before.equals(after2));
 	}
 	
 	private static void varargsConstructorUsage() {
