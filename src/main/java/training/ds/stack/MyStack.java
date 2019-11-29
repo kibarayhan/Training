@@ -1,7 +1,6 @@
 package training.ds.stack;
 
-public class MyStack {
-
+public class MyStack<T> {
 	private static int MAX_SIZE = 10;
 	private int index = 0;
 	String[] data;
@@ -30,5 +29,4 @@ public class MyStack {
 		index--;
 		return this.data[index];
 	}
-
 }
