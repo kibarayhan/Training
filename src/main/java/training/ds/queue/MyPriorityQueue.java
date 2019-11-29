@@ -88,8 +88,16 @@ public class MyPriorityQueue {
 	}
 
 	private void swapItems(int i, int j) {
-		int temp = items[i];
-		items[i] = items[j];
-		items[j] = temp;
+//		int temp = items[i];
+//		items[i] = items[j];
+//		items[j] = temp;
+
+        items[i] = items[i] - items[j]; // A = A - B
+        items[j] = items[i] + items[j]; // B = A + B
+        items[i] = items[j] - items[i]; // A = B - A;
+
+//        items[i] = items[i]^items[j];
+//        items[j] = items[i]^items[j];
+//        items[i] = items[i]^items[j];
 	}
 }

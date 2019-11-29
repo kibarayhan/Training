@@ -13,9 +13,9 @@ public class MyLinkedList<T> {
         myLinkedList.addToTail(5);
         myLinkedList.addToTail(6);
         myLinkedList.addToTail(10);
-
+        myLinkedList.printItems();
         Integer current = myLinkedList.findKthToLast(5);
-        System.out.println(current);
+        System.out.println("5th element to last is:" + current);
     }
 
     public T findKthToLast(int idx){
@@ -37,10 +37,12 @@ public class MyLinkedList<T> {
 
     public void printItems() {
         Node<T> n = head;
+        System.out.println("Elements are:");
         while(n != null){
-            System.out.println(n.item + ",");
+            System.out.print(n.item + ",");
             n = n.next;
         }
+        System.out.println();
     }
 
     class Node<T>{
