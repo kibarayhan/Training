@@ -16,7 +16,7 @@ public class HashTableImpl<K,V> implements HashTableI<K,V> {
 		this.size = size;
 		this.numElements = 0;
 		this.maxLoadFactor = 0.75f;
-		items = (ArrayList<HashEntry<K,V>> []) new ArrayList[size];
+		items = new ArrayList[size];
 		Arrays.fill(items, new ArrayList<>());
 	}
 
@@ -38,7 +38,7 @@ public class HashTableImpl<K,V> implements HashTableI<K,V> {
 				return p.value;
 			}
 		}
-		
+
 		return null;
 	}
 	
@@ -66,7 +66,7 @@ public class HashTableImpl<K,V> implements HashTableI<K,V> {
 	}	
 	
 	private float loadFactor() {
-		return numElements / size;
+		return (float) (numElements / size);
 	}
 
 	class HashEntry<K,V> implements Comparable<HashEntry<K,V>>{
@@ -81,7 +81,7 @@ public class HashTableImpl<K,V> implements HashTableI<K,V> {
 
 		@Override
 		public int compareTo(HashEntry<K,V> o) {
-			return ((Comparable<K>)this.key).compareTo(o.key); 
+			return ((Comparable<K>)this.key).compareTo(o.key);
 		}
 
 		@Override
@@ -89,7 +89,7 @@ public class HashTableImpl<K,V> implements HashTableI<K,V> {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + ((key == null) ? 0 : key.hashCode());
-			result = result & 0X7FFFFFFF;
+			result = result & 0x7FFFFFFF; // remove the sign bit or convert it to positive (32 bit int)
 			result = result % size;
 			return result;
 		}
