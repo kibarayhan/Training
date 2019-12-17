@@ -25,7 +25,8 @@ public class HotelRating {
     		hotelMapByPoints.put(hotels.get(idx++), pozitivePoints - negativePoints);    		
     	}
     	
-    	hotelMapByPoints = hotelMapByPoints.entrySet().stream().filter(e -> e.getValue()>5).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    	hotelMapByPoints = hotelMapByPoints.entrySet().stream().filter(e -> e.getValue()>5).collect(Collectors.toMap(Map.Entry::getKey,
+                Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     	
         printMap(hotelMapByPoints);
         return null;

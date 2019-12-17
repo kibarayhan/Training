@@ -1,5 +1,7 @@
 package training.ds.stack;
 
+import java.util.BitSet;
+import java.util.Stack;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -7,33 +9,37 @@ import java.util.stream.IntStream;
 public class Test {
 
 	public static void main(String[] args) {
-		MyStack stack = new MyStack();
-		try {
-			stack.push("1");
-			System.out.println(stack.pop());
-			System.out.println(stack.pop());
-		} catch (Exception e) {
-			e.printStackTrace();
+		System.out.println(longestValidParentheses(")()())"));
+	}
+
+	public static int longestValidParentheses(String s) {
+		Stack<Integer> stIdx = new Stack<>();
+		Stack<Character> stChar = new Stack<>();
+		int result = 0;
+		for(int i = 0; i < s.length(); i++){
+			if (s.charAt(i) == '(' ){
+				stChar.push(s.charAt(i));
+				stIdx.push(i);
+			}else{
+				if (!stChar.isEmpty() && stChar.peek() == '('){
+					stChar.pop();
+					stIdx.pop();
+				}else{
+					stIdx.push(i);
+				}
+			}
 		}
 
-		//
-//		Runnable r2 = new Runnable() {
-//			@Override
-//			public void run() {
-//				System.out.println("testR2");
-//			}
-//		};
-//
-//		int number = 13;
-//		IntPredicate isDivisible = index -> number % index == 0;
-//		Predicate<Integer> p1 = index -> number % index == 0;
-//		System.err.println(IntStream.range(2, number).noneMatch(isDivisible));
-//
-//
-//
-//		Runnable r1 = () -> System.out.println("testR1");
-//		r1.run();
-
-
+		if (stIdx.isEmpty()) return s.length();
+		else{
+			int a = s.length(), b=0;
+			while(!stIdx.isEmpty()){
+				b = stIdx.pop();
+				result = Math.max(result, a-b-1);
+				a = b;
+			}
+			return Math.max(result, a);
+		}
 	}
+
 }
