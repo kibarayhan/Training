@@ -31,7 +31,7 @@ public class BST {
 		bst.insertRec(28);
 		bst.insertRec(5);
 		bst.insertRec(16);
-		System.out.println("isBalanced(bst.root) = " + isBST(bst.root, Integer.MIN_VALUE, Integer.MAX_VALUE));
+		System.out.println("is Binary Search Tree : " + isBST(bst.root, Integer.MIN_VALUE, Integer.MAX_VALUE));
         inOrderTraversal(bst.root);
 
         System.out.println("\n>> 6 is found : " + (search(bst.root, 6) != null));
@@ -68,7 +68,7 @@ public class BST {
 
     public static boolean isBST(Node node, int min, int max){
     	if (node == null) return true;
-    	if (node.value <= min || node.value > max) return false;
+    	if (node.value < min || node.value > max) return false;
     	if (!isBST(node.left, min, node.value) || !isBST(node.right, node.value, max)) return false;
 		return true;
 	}
@@ -166,6 +166,27 @@ public class BST {
 			postOrderTraversal(root.right);
 			System.out.print(root.value + ",");
 		}
+	}
+
+	static boolean isBalanced(Node root){
+		int left = 0, right = 0;
+		if (root.left!=null) left = getHeight(root.left);
+		if (root.right!=null) right = getHeight(root.right);
+		return Math.abs(left-right) <= 1 ;
+	}
+
+	private static int getHeight(Node node) {
+    	if (node == null)
+    		return -1;
+
+    	int leftHeigth = 0, rightHeight = 0;
+    	if (node.left != null)
+			leftHeigth = getHeight(node.left);
+
+    	if (node.right != null)
+			rightHeight = getHeight(node.right);
+
+    	return Integer.max(leftHeigth, rightHeight) + 1;
 	}
 
 }

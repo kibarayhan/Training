@@ -40,7 +40,7 @@ public class QuickSort {
 
     public static void main(String[] args) {
         int items[] = {5, 7, 3, 9, 6};
-        new QuickSort().quickSort(items, 0, 4);
+        new QuickSort().quickSort(items, 0, items.length -1 );
         printItems(items);
     }
 
@@ -53,7 +53,7 @@ public class QuickSort {
     }
 
     /*
-    checks each element and swaps it before the pivot if its value is smaller.
+    checks each element and swaps it before the pivot if its value is smaller or equal.
     By the end of the partitioning, all elements less then the pivot are on the left of it and all elements greater
     then the pivot are on the right of it. The pivot is at its final sorted position and the function returns this position
      */

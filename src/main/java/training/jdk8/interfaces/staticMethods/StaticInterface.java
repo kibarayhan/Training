@@ -12,13 +12,13 @@ public interface StaticInterface {
 //    default boolean isNull(String str) {
     static boolean isNull(String str) {
         System.out.println("Interface Null Check.");
-        return str == null ? true : "".equals(str) ? true : false;
+        return str == null || ("".equals(str));
     }
 
     // is Null implementing with lambdas
     static boolean isNullWithLambda(String s) {
     	System.out.println("Interface Null Check with Lambda.");
-    	Predicate<String> isNull = (s1) -> (s1 ==null ? null : "".equals(s1)? true:false);
+    	Predicate<String> isNull = (s1) -> (s1 == null || "".equals(s1) );
     	return isNull.test(s);
     }
     

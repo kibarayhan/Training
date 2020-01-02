@@ -10,7 +10,8 @@ public class Person {
 	
 	public Person(String... names) {
 		System.out.println("Varargs ctor, names=" + Arrays.asList(names));
-		name = Arrays.stream(names).collect(Collectors.joining(" "));
+//		name = Arrays.stream(names).collect(Collectors.joining(" "));
+		name = String.join(" ", names);
 	}
 	
 	public Person (Person person) {

@@ -29,11 +29,11 @@ public class Lambdas {
 		//
 		values.forEach(e -> {
 			System.out.println(String.format("using lambda %d", e));
-			System.out.println(String.format("using lambda %d", e));
 		});
 
 		// below codes are equal
 		values.sort((e1, e2) -> e1.compareTo(e2));
+		values.sort(Integer::compareTo);
 		values.sort((e1, e2) -> {
 			int result = e1.compareTo(e2);
 			return result;

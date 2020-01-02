@@ -20,16 +20,25 @@ public class FunctionalInterfaces {
 			boolean result = sb.reverse().toString().equalsIgnoreCase(s);
 			return result;
 		};
-		Predicate<String> isPolindrome3 = s-> new PalindromeCheckerImpl().isPolindrome(s);		
-		Stream.of("TactCoa", "atcocta").filter(isPolindrome3).forEach(System.out::println);		
+		Predicate<String> isPolindrome3 = s-> new PolindromeCheckerImpl().isPolindrome(s);
+		Stream.of("TactCoa", "atcocta").filter(isPolindrome3).forEach(System.out::println);
+		Stream.of("TactCoa", "atcocta").filter(new PolindromeCheckerImpl()::isPolindrome2);
+		Stream.of("TactCoa", "atcocta").filter(PolindromeChecker::isPolindrome3);
 	}
 	
 	@FunctionalInterface
-	public interface PalindromeChecker{
+	public interface PolindromeChecker {
 		boolean isPolindrome(String s);
+
+		default boolean isPolindrome2(String s){
+			return isPolindrome3(s);
+		}
+		static boolean isPolindrome3(String s){
+			return new StringBuilder(s).reverse().toString().equalsIgnoreCase(s);
+		}
 	}
 	
-	public class PalindromeCheckerImpl implements PalindromeChecker{
+	public class PolindromeCheckerImpl implements PolindromeChecker {
 		@Override
 		public boolean isPolindrome(String s) {
 			return new StringBuilder(s).reverse().toString().equalsIgnoreCase(s);

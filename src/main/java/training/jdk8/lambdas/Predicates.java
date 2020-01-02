@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /*
- * (t) -> true/false;
+ * (T) -> Boolean (true/false);
+ *
  * A Predicate returns true or false. These are used for filters or replacing big chains of if/else logic.
  * We need a function for checking a condition. 
  * A Predicate is one such function accepting a single argument to evaluate to a boolean result.
@@ -26,6 +28,10 @@ public class Predicates {
         MyPredicate<Integer> isOddMy = n -> n %2 != 0;
         Collection<Integer> oddItems = myFilter(isOddMy, items);
         oddItems.forEach(i -> System.out.println(i));
+
+
+        oddItems = items.stream().filter(isOdd).collect(Collectors.toList());
+        System.out.println("\n"+oddItems);
     }
 
     public interface MyPredicate<T> {

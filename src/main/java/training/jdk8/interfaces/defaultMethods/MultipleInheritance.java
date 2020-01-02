@@ -24,7 +24,7 @@ public class MultipleInheritance {
 		}
 	}
 	
-	// Note: You must override the function to get complier happy
+	// Note: You must override the function to get compiler happy
 	class MultipleInheritance2 implements Veli, Person{
 		@Override
 		public String getName() {
