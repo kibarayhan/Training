@@ -1,15 +1,20 @@
 package training.ds.btree;
 
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+
 public class BST {
-    Node root;
-    // to use at isBTS(node) function
+	Node root;
+	// to use at isBTS(node) function
 	private static Integer lastVisited = null;
 
-    BST() {
-        root = null;
-    }
+	BST() {
+		root = null;
+	}
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 
 		Node root2 = new Node(50);
 		Node left2 = new Node(15);
@@ -34,12 +39,12 @@ public class BST {
 		System.out.println("is Binary Search Tree : " + isBST(bst.root, Integer.MIN_VALUE, Integer.MAX_VALUE));
         inOrderTraversal(bst.root);
 
-        System.out.println("\n>> 6 is found : " + (search(bst.root, 6) != null));
-        System.out.println("\n>> 16 is found : " + (search(bst.root, 16) != null));
+		System.out.println("\n>> 6 is found : " + (search(bst.root, 6) != null));
+		System.out.println("\n>> 16 is found : " + (search(bst.root, 16) != null));
 
 		System.out.println("\n>> insert 22");
-        insertRec(bst.root, 22);
-        inOrderTraversal(bst.root);
+		insertRec(bst.root, 22);
+		inOrderTraversal(bst.root);
 
 		System.out.println("\n>> insert 10");
 		insertRec(bst.root, 10);
@@ -52,14 +57,14 @@ public class BST {
 		delete(bst.root, 20);
 		inOrderTraversal(bst.root);
 		System.out.println();
-    }
+	}
 
-	public static boolean isBST(Node node){
-		if  (node == null) return true;
+	public static boolean isBST(Node node) {
+		if (node == null) return true;
 
-    	if (!isBST(node.left)) return false;
+		if (!isBST(node.left)) return false;
 
-    	if (lastVisited != null && lastVisited >= node.value) return false;
+		if (lastVisited != null && lastVisited >= node.value) return false;
 		lastVisited = node.value;
 
 		if (!isBST(node.right)) return false;
@@ -74,42 +79,42 @@ public class BST {
 	}
 
 	public static Node search(Node node, int val) {
-        // Base Cases: root is null or val is present at root
-        if (node == null || node.value == val)
-            return node;
-        // val is less than root's val
-        if (val < node.value) {
-            return search(node.left, val);
-        }
+		// Base Cases: root is null or val is present at root
+		if (node == null || node.value == val)
+			return node;
+		// val is less than root's val
+		if (val < node.value) {
+			return search(node.left, val);
+		}
 
-        return search(node.right, val);
-    }
+		return search(node.right, val);
+	}
 
-    // This method mainly calls insertRec()
-    void insertRec(int key) {
-        root = insertRec(root, key);
-    }
+	// This method mainly calls insertRec()
+	void insertRec(int key) {
+		root = insertRec(root, key);
+	}
 
-    /* A recursive function to insert a new key in BST */
-    public static Node insertRec(Node root, int val) {
-        /* If the tree is empty, return a new node */
-        if (root == null) {
-            root = new Node(val);
-            return root;
-        }
+	/* A recursive function to insert a new key in BST */
+	public static Node insertRec(Node root, int val) {
+		/* If the tree is empty, return a new node */
+		if (root == null) {
+			root = new Node(val);
+			return root;
+		}
 
-        /* Otherwise, recur down the tree */
-        if (val < root.value) {
+		/* Otherwise, recur down the tree */
+		if (val < root.value) {
 			root.left = insertRec(root.left, val);
-        }else{
+		} else {
 			root.right = insertRec(root.right, val);
 		}
 		return root;
-    }
+	}
 
-    public static Node delete(Node root, int val){
-    	if (root == null){
-    		return null;
+	public static Node delete(Node root, int val) {
+		if (root == null) {
+			return null;
 		}
 
     	if (val < root.value){
@@ -187,6 +192,45 @@ public class BST {
 			rightHeight = getHeight(node.right);
 
     	return Integer.max(leftHeigth, rightHeight) + 1;
+	}
+
+	static List<Integer> inOrderTraversalIterative(Node root) {
+		// stack data structure to store
+		Deque<Node> stack = new LinkedList<>();
+		Node curr = root;
+		List<Integer> result = new ArrayList<>();
+
+		while (!stack.isEmpty() || curr != null) {
+			if (curr != null) {
+				stack.push(curr);
+				// going down left
+				curr = curr.left;
+			} else {
+				// going up
+				curr = stack.pop();
+				result.add(curr.value);
+				// going down right
+				curr = curr.right;
+			}
+		}
+		return result;
+	}
+
+	static List<Integer> preOrderTraversalIterative(Node root) {
+		List<Integer> result = new ArrayList<>();
+		Deque<Node> stack = new LinkedList<>();
+		stack.push(root);
+
+		while(!stack.isEmpty()){
+			Node curr = stack.pop();
+			if (curr != null){
+				result.add(curr.value);
+				stack.push(curr.right);
+				stack.push(curr.left);
+			}
+		}
+
+		return result;
 	}
 
 }

@@ -77,29 +77,22 @@ public class MyPriorityQueue{
 						e.printStackTrace();
 					}
 				}else {
-					Optional<Item> itemToRemove = items.stream().sorted(new Comparator<Item>() {
-						@Override
-						public int compare(Item o1, Item o2) {
-							if (o1.priority > o2.priority) {
-								return -1;
-							}else if (o1.priority < o2.priority) {
-								return 1;
-							}
-							if (o1.age > o2.age) {
-								return -1;
-							}else if (o1.age < o2.age) {
-								return 1;
-							}
-							return 0;
+					Optional<Item> itemToRemove = items.stream().sorted((o1, o2) -> {
+						if (o1.priority > o2.priority) {
+							return -1;
+						}else if (o1.priority < o2.priority) {
+							return 1;
 						}
+						if (o1.age > o2.age) {
+							return -1;
+						}else if (o1.age < o2.age) {
+							return 1;
+						}
+						return 0;
 					}).findFirst();
-					
-					if (itemToRemove.isPresent()) {
-						items.remove(itemToRemove.get());
-						return itemToRemove.get();
-					}
-					
-					return null;
+
+					items.remove(itemToRemove.get());
+					return itemToRemove.get();
 				}
 			}
 		}
