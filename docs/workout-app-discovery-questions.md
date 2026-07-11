@@ -159,12 +159,21 @@ Everything above is downstream of these:
 | First user | **Both sports equally** (running + cycling) | Acceptable because of the next answer — as a personal tool, "both" means *your* two sports, not two market segments. Zones/thresholds must be per-sport from day one; power targets for bike, pace/HR for run. |
 | Business intent | **Personal tool first** | No monetization, GTM, pricing, or kill-criteria work now (§§11–12 deferred). Free Apple dev account limits apply until $99/yr membership. Design the data model as if users > 1, but build features for users = 1. |
 
-### Next questions that now matter most (product details, §§2–6)
+### Product-detail decisions (round 2, answered 2026-07-11)
 
-1. Which intensity target types do *you* actually train with — power on the bike and pace or HR on the run?
-2. Do your workouts need repeat blocks (6× [3min on / 2min off])? Almost certainly yes → data model must have them from the start.
-3. Time-based steps only, or also distance-based and lap-button-ended steps?
-4. Do you own an Apple Watch (which model/watchOS?) and is it your only recording device, or is there a Garmin/Wahoo in the picture that records some activities?
-5. Where do your current FTP / threshold pace / LTHR numbers come from, and do you want threshold history from day one (recommended: yes, it's cheap now and painful later)?
-6. Matching rule you'd want: same-day only, or ±1 day window for "did the planned workout"?
-7. Combined fitness (one CTL) or per-sport split? (You do two sports — split is more honest, slightly more UI.)
+| # | Question | Decision | Consequences |
+|---|---|---|---|
+| 1 | Intensity target types | **All four: power (bike), pace (run), HR (both), cadence/RPE** | Full target-editor surface; per-sport zone models (power zones, pace zones, separate run/bike HR zones) in the data model from day one. RPE steps mean "no sensor target" must be a valid step state. |
+| 2 | Repeat blocks | **Yes, single-level** (6×[on/off]) | Data model: workout → items, where an item is a step or a repeat-block of steps. Maps 1:1 to both WorkoutKit interval blocks and FIT workout repeat steps — no flattening needed anywhere. No nesting. |
+| 3 | Step length basis | **Time, distance, and lap-button (open)** | All three supported by WorkoutKit goals and FIT duration types. Skip calories. Editor needs three duration modes per step. |
+| 4 | Devices owned | **Apple Watch + Garmin + Hammerhead Karoo + indoor trainer (Zwift etc.)** | The biggest architectural answer: (a) **FIT workout export is MVP-core, not v2** — it's how workouts reach the Garmin and Karoo; (b) completed activities arrive from multiple sources → **duplicate detection is unavoidable** (same ride via Zwift + Karoo + HealthKit); (c) HealthKit alone won't see Garmin/Karoo rides unless a sync app forwards them — plan for Strava or direct APIs as the activity aggregator in v2, HealthKit + manual FIT import for MVP. |
+| 5 | Thresholds | **Manual entry + dated history** | `ThresholdRecord(sport, kind, value, validFrom)` — every activity/workout is scored against the threshold valid on its date. Auto-detection (eFTP-style) deferred to v2. |
+| 6 | Plan matching | **±1 day auto-match, same sport, manual re-link override** | Compliance states: completed / substituted (matched but different structure) / missed / unplanned. Fitness projection consumes actual-when-matched, planned otherwise. |
+| 7 | Fitness split | **Combined CTL/ATL/TSB + per-sport breakdown** | Load stored per activity with sport tag; chart shows combined line with run/bike stacked or toggled. Projection does the same for future planned workouts. |
+
+### New requirement: export & third-party head units (added 2026-07-11)
+
+- **MVP: FIT workout file export** — the lingua franca. A structured-workout `.fit` can be dropped onto a Garmin (`NewFiles/` via USB / Garmin Connect import) and imported into Hammerhead's dashboard for the Karoo. Single-level repeats, time/distance/open steps, and power/pace/HR/cadence targets all map cleanly.
+- **Consider at MVP (cheap): `.zwo` export** for Zwift trainer sessions (power-based workouts only).
+- **v2: direct platform sync** — Garmin Training API (push workouts to device automatically; requires Garmin developer-program approval — apply early, approval takes time) and Hammerhead/TrainingPeaks-style integrations. Also inbound: pull completed activities from Garmin/Strava so the fitness model sees rides that never touch HealthKit.
+- Design rule this creates: **the internal workout model must be defined as the superset that exports losslessly to both WorkoutKit and FIT** — build the model against those two targets from the first line of code, not retrofitted.
