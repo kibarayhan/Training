@@ -147,3 +147,24 @@ Everything above is downstream of these:
 2. **Platform commitment** — native iOS/Watch only, or cross-platform ambitions that would forfeit the WorkoutKit wedge?
 3. **Who exactly is the first user** — you? Apple-Watch-first cyclists? Runners? Everyone (wrong answer)?
 4. **What's the business intent** — personal tool, indie business, or startup — and the kill criteria that go with it?
+
+---
+
+## Decisions so far (answered 2026-07-11)
+
+| Question | Decision | Consequences |
+|---|---|---|
+| AI role | **Dev tool only** (Claude Code writes the Swift; no AI features in-app for now) | No inference costs, no AI-advice liability; §7 deferred entirely. Natural-language workout creation stays on the someday list. |
+| Platform | **Native iOS + watchOS (Swift/SwiftUI, WorkoutKit-first)** | CloudKit/local-first storage is the right call — no server to run. Android/web out of scope. |
+| First user | **Both sports equally** (running + cycling) | Acceptable because of the next answer — as a personal tool, "both" means *your* two sports, not two market segments. Zones/thresholds must be per-sport from day one; power targets for bike, pace/HR for run. |
+| Business intent | **Personal tool first** | No monetization, GTM, pricing, or kill-criteria work now (§§11–12 deferred). Free Apple dev account limits apply until $99/yr membership. Design the data model as if users > 1, but build features for users = 1. |
+
+### Next questions that now matter most (product details, §§2–6)
+
+1. Which intensity target types do *you* actually train with — power on the bike and pace or HR on the run?
+2. Do your workouts need repeat blocks (6× [3min on / 2min off])? Almost certainly yes → data model must have them from the start.
+3. Time-based steps only, or also distance-based and lap-button-ended steps?
+4. Do you own an Apple Watch (which model/watchOS?) and is it your only recording device, or is there a Garmin/Wahoo in the picture that records some activities?
+5. Where do your current FTP / threshold pace / LTHR numbers come from, and do you want threshold history from day one (recommended: yes, it's cheap now and painful later)?
+6. Matching rule you'd want: same-day only, or ±1 day window for "did the planned workout"?
+7. Combined fitness (one CTL) or per-sport split? (You do two sports — split is more honest, slightly more UI.)
