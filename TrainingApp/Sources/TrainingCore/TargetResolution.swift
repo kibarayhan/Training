@@ -5,6 +5,12 @@ public struct ResolvedTarget: Equatable, Sendable {
     public var kind: TargetKind
     public var lower: Double
     public var upper: Double
+
+    public init(kind: TargetKind, lower: Double, upper: Double) {
+        self.kind = kind
+        self.lower = lower
+        self.upper = upper
+    }
 }
 
 extension IntensityTarget {
