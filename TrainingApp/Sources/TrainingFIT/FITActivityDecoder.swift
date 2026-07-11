@@ -68,7 +68,7 @@ public enum FITActivityDecoder {
 
         return Activity(
             source: .fitImport(device: nil),
-            externalID: "fit-\(serial)-\(created)",
+            externalIDs: ["fit-\(serial)-\(created)"],
             sport: sport,
             start: start,
             movingSeconds: moving,

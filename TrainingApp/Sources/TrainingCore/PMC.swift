@@ -40,9 +40,7 @@ public enum PMCEngine {
         guard from <= to else { return [] }
 
         let daySeconds = 86_400.0
-        func dayIndex(_ date: Date) -> Int {
-            Int((date.timeIntervalSince1970 / daySeconds).rounded(.down))
-        }
+        func dayIndex(_ date: Date) -> Int { date.utcDayIndex }
 
         var loadBySportAndDay: [Sport: [Int: Double]] = [:]
         var sports: Set<Sport> = []
@@ -91,10 +89,14 @@ public enum PMCEngine {
 
     /// Form on a specific day (e.g. race day) from a computed series.
     public static func form(on date: Date, in series: [PMCPoint]) -> Double? {
-        let daySeconds = 86_400.0
-        let day = Int((date.timeIntervalSince1970 / daySeconds).rounded(.down))
-        return series.first {
-            Int(($0.date.timeIntervalSince1970 / daySeconds).rounded(.down)) == day
-        }?.tsb
+        series.first { $0.date.utcDayIndex == date.utcDayIndex }?.tsb
+    }
+}
+
+extension Date {
+    /// Calendar-day bucket shared by PMC, matching, and the sync window.
+    /// UTC-based for now; a future timezone-awareness fix lands in one place.
+    public var utcDayIndex: Int {
+        Int((timeIntervalSince1970 / 86_400).rounded(.down))
     }
 }

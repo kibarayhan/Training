@@ -27,9 +27,11 @@ public struct Sample: Codable, Equatable, Hashable, Sendable {
 public struct Activity: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
     public var source: ActivitySource
-    /// Stable identifier from the source system (HealthKit UUID, FIT
-    /// serial+timestamp), used for idempotent re-import and dedup.
-    public var externalID: String?
+    /// Stable identifiers from the source systems (HealthKit UUID, FIT
+    /// serial+timestamp), used for idempotent re-import and dedup. Plural
+    /// because merging duplicates unions the identifiers of every copy —
+    /// re-importing any of them must still hit the merged record.
+    public var externalIDs: [String]
     public var sport: Sport
     public var start: Date
     public var movingSeconds: Double
@@ -50,7 +52,7 @@ public struct Activity: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// line up across sources that report pauses differently.
     public var end: Date { start.addingTimeInterval(elapsedSeconds ?? movingSeconds) }
 
-    public init(id: UUID = UUID(), source: ActivitySource, externalID: String? = nil,
+    public init(id: UUID = UUID(), source: ActivitySource, externalIDs: [String] = [],
                 sport: Sport, start: Date, movingSeconds: Double,
                 elapsedSeconds: Double? = nil,
                 distanceMeters: Double? = nil, elevationGainMeters: Double? = nil,
@@ -59,7 +61,7 @@ public struct Activity: Codable, Equatable, Hashable, Identifiable, Sendable {
                 samples: [Sample] = []) {
         self.id = id
         self.source = source
-        self.externalID = externalID
+        self.externalIDs = externalIDs
         self.sport = sport
         self.start = start
         self.movingSeconds = movingSeconds

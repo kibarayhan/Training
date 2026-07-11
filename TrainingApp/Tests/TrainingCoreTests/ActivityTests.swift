@@ -7,7 +7,7 @@ final class ActivityTests: XCTestCase {
         let start = Date(timeIntervalSince1970: 1_780_000_000)
         let activity = Activity(
             source: .fitImport(device: "Karoo"),
-            externalID: "fit-123",
+            externalIDs: ["fit-123"],
             sport: .ride,
             start: start,
             movingSeconds: 3600,

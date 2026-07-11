@@ -96,7 +96,7 @@ final class ActivityDecodeTests: XCTestCase {
         XCTAssertEqual(activity.averageHeartRate, 140)
         XCTAssertEqual(activity.elevationGainMeters, 250)
         XCTAssertEqual(activity.source, .fitImport(device: nil))
-        XCTAssertNotNil(activity.externalID)
+        XCTAssertFalse(activity.externalIDs.isEmpty)
     }
 
     func testDecodesRecordsIntoSamples() throws {
