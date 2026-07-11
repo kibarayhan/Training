@@ -38,6 +38,14 @@ run_tests() { # <TestModule> <linked-libs...>
 
 build_lib TrainingCore
 
+run_demo() {
+    swiftc $SWIFT_CORELIBS_LDFLAGS -module-name demo \
+        -I "$BUILD" -L "$BUILD" -lTrainingCore -lTrainingFIT -lTrainingSync \
+        -Xlinker -rpath -Xlinker "$ABS_BUILD" \
+        Sources/demo/main.swift -o "$BUILD/demo"
+    "$BUILD/demo"
+}
+
 case "${1:-all}" in
     core) run_tests TrainingCoreTests TrainingCore ;;
     fit)
@@ -46,11 +54,15 @@ case "${1:-all}" in
     sync)
         build_lib TrainingSync
         run_tests TrainingSyncTests TrainingCore TrainingSync ;;
+    demo)
+        build_lib TrainingFIT
+        build_lib TrainingSync
+        run_demo ;;
     all)
         build_lib TrainingFIT
         build_lib TrainingSync
         run_tests TrainingCoreTests TrainingCore
         run_tests TrainingFITTests TrainingCore TrainingFIT
         run_tests TrainingSyncTests TrainingCore TrainingSync ;;
-    *) echo "usage: $0 [core|fit|sync|all]"; exit 2 ;;
+    *) echo "usage: $0 [core|fit|sync|all|demo]"; exit 2 ;;
 esac

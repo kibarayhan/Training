@@ -1,0 +1,22 @@
+name: TrainingApp tests
+
+on:
+  push:
+    paths:
+      - "TrainingApp/**"
+      - ".github/workflows/swift-tests.yml"
+  pull_request:
+    paths:
+      - "TrainingApp/**"
+      - ".github/workflows/swift-tests.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: swift:6.1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: swift test --package-path TrainingApp
+      - name: Run demo
+        run: swift run --package-path TrainingApp demo

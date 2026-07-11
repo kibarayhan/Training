@@ -1,6 +1,6 @@
 # Implementation Plan: Structured Training App MVP
 
-**Status:** v1.1 — 2026-07-11 (reviewed; see "Review findings" at bottom)
+**Status:** v1.2 — 2026-07-11 (Phase A implemented; see progress note at bottom)
 **Implements:** `workout-app-mvp-spec.md` (all sections)
 **Constraint that shapes this plan:** no Mac access for ~2 weeks. Everything in
 **Phase A** compiles and unit-tests on Linux (Swift toolchain + SwiftPM, CI via
@@ -219,3 +219,21 @@ Self-review against the spec and real-world constraints. Four defects found and 
 Also checked, no change needed: every spec §3–§8 feature traces to a Phase A/C task;
 the M1/M2 week-3 overlap is intentional (builder UI reuses the slice's plumbing);
 acceptance criteria §10 all land in M7; post-MVP ordering matches spec §9.
+
+
+---
+
+## Progress note (2026-07-11)
+
+Phase A implemented TDD-first in `TrainingApp/` on this branch, one commit per
+milestone (A1–A6), each with a post-milestone review whose findings were fixed
+before commit. 132 tests green. Deviations from plan: local toolchain is
+nixpkgs Swift 5.8 (swift.org and container registries are blocked from this
+environment), which lacks libIndexStore — `scripts/test-linux.sh` provides an
+XCTMain-based runner; CI (`.github/workflows/swift-tests.yml`) uses the
+official swift:6.1 image with plain `swift test` + demo run. A3 review moved
+two items into the code earlier than planned: enhanced_speed decoding and
+multi-session rejection. A5 review changed `Activity.externalID` to an
+`externalIDs` array to keep merged-duplicate re-imports idempotent.
+Remaining before Mac-day: your fixture exports + the account/API sign-ups in
+the readiness checklist.
