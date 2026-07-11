@@ -27,7 +27,7 @@ reshuffling, wellness tracking (v1.x), open API.
 ## 2. Platform & architecture
 
 - **Swift / SwiftUI**, iOS 17+ / watchOS 10+ (WorkoutKit floor). Developed with AI tooling (Claude Code).
-- **Local-first storage** (SwiftData/Core Data) with CloudKit sync for backup across the user's devices. No custom backend.
+- **Local-first storage** (SwiftData/Core Data) with CloudKit sync for backup across the user's devices. No custom backend. *(Note: CloudKit requires the paid Apple Developer membership — MVP starts local-only until enrollment; see implementation plan B1.)*
 - Watch experience via **WorkoutKit sync into Apple's native Workout app** — no custom Watch app at MVP.
 - **Design rule:** the internal workout model is the superset that exports **losslessly to both WorkoutKit and Garmin FIT**. Every builder feature must map to both targets (or explicitly degrade, documented per feature).
 

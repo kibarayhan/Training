@@ -1,6 +1,6 @@
 # Implementation Plan: Structured Training App MVP
 
-**Status:** v1 — 2026-07-11
+**Status:** v1.1 — 2026-07-11 (reviewed; see "Review findings" at bottom)
 **Implements:** `workout-app-mvp-spec.md` (all sections)
 **Constraint that shapes this plan:** no Mac access for ~2 weeks. Everything in
 **Phase A** compiles and unit-tests on Linux (Swift toolchain + SwiftPM, CI via
@@ -36,7 +36,8 @@ TrainingApp/
 ├── Sources/
 │   ├── TrainingCore/        # domain model + math (zero dependencies)
 │   ├── TrainingFIT/         # FIT encode/decode (depends on TrainingCore)
-│   └── TrainingSync/        # matching, dedup, sync-window logic (depends on TrainingCore)
+│   ├── TrainingSync/        # matching, dedup, sync-window logic (depends on TrainingCore)
+│   └── demo/                # executable target: end-to-end scripted demo (Phase A DoD)
 └── Tests/                   # mirrors Sources; fixture FIT files in Tests/Fixtures
 ```
 
@@ -91,7 +92,7 @@ directly (header, record framing, definition/data messages, CRC-16):
 ### A5. Matching, dedup, sync window (`TrainingSync`) — spec §6, §7
 
 - [ ] Auto-match: same sport within ±1 day; scoring when multiple candidates (closest date, then duration/load similarity); manual re-link API
-- [ ] Compliance classifier: completed / substituted (structure similarity below threshold) / missed / unplanned
+- [ ] Compliance classifier: completed / substituted / missed / unplanned. **MVP scope note:** without interval detection (post-MVP), "substituted" can only be judged coarsely — sport + duration/load similarity vs the planned workout, NOT per-step structure. Design the classifier API so per-step structure comparison can slot in later without changing callers.
 - [ ] **Duplicate detection**: sport + start-time proximity (±3 min default) + duration/distance similarity → merge policy (prefer richer sample set); force merge/split API
 - [ ] WorkoutKit **sync-window selector**: nearest ≤15 scheduled workouts, stable ordering, diff-based add/remove plan
 - Tests: table-driven scenarios — late workout (+1 day), two activities one day, substituted ride, Zwift ride arriving twice (HealthKit + Karoo FIT), month with 40 scheduled workouts windowed to 15
@@ -109,8 +110,9 @@ season of activities, and prints the PMC + projection — reviewable without any
 ## Phase B — Mac-day: spikes + project scaffold (~2 days)
 
 ### B1. Scaffold (half day)
-- [ ] Xcode project: iOS app target (iOS 17+), packages added, SwiftData persistence adapter for `TrainingCore` types, CloudKit-enabled container, HealthKit + WorkoutKit entitlements/usage strings
-- [ ] Personal team signing; app runs on your iPhone
+- [ ] Xcode project: iOS app target (iOS 17+), packages added, SwiftData persistence adapter for `TrainingCore` types (**local-only at first — see account note**), HealthKit + WorkoutKit entitlements/usage strings
+- [ ] Signing + on-device install on your iPhone
+- **Apple account decision (was wrong in v1):** a free personal team **cannot use CloudKit/iCloud entitlements**, and free provisioning profiles **expire every 7 days** — unusable for an app you train with daily. → Buy the **$99/yr Apple Developer membership on Mac-day**; until then persistence is local-only and the spec's CloudKit backup becomes a follow-up task after enrollment (enrollment itself can take a day or two — start it before Mac-day if possible).
 
 ### B2. Spike 1 — WorkoutKit proof (day 1)
 Hardcoded workout (warmup, 4×[3min power-range / 2min recovery], open cooldown):
@@ -121,7 +123,9 @@ Hardcoded workout (warmup, 4×[3min power-range / 2min recovery], open cooldown)
 - **Checklist output:** amend `mapping-table.md` with observed reality vs docs
 
 ### B3. Spike 2 — FIT on real head units (day 1–2)
-- [ ] AirDrop/USB the Phase-A-generated FIT workout to Garmin (`NewFiles/`) and import via Hammerhead dashboard to Karoo
+- [ ] **First: verify the import paths themselves** (v1 asserted these too confidently): Garmin Connect web/app does NOT import structured-workout FIT files — the reliable manual route is USB mass-storage into the device's `NewFiles/` folder (works on Edge units; watch support varies by model). Hammerhead's dashboard workout import also varies by firmware. Test both with your actual devices and record what works.
+- [ ] **Fallback bridge if manual paths fail:** upload the workout to **Intervals.icu via its open API** and let its existing Garmin/Hammerhead integrations deliver it to the devices. Undignified but free, and it de-risks v1 usability until our own Garmin API access (v2) is approved.
+- [ ] Sideload the Phase-A-generated FIT workout to Garmin and Karoo via whichever path B3 verified
 - [ ] Execute on both; verify step names, durations, targets render correctly
 - [ ] Export the resulting completed activities; run through `TrainingFIT` decoder; verify dedup/matching pipeline end-to-end with real files
 - **Checklist output:** device quirks list; encoder fixes as needed
@@ -175,7 +179,9 @@ Garmin/Strava inbound sync (apply for **Garmin developer program during Phase A*
 - [ ] Note your current FTP, LTHR (run/bike), threshold pace + approximate history for seeding
 - [ ] Pick the 5 real workouts you actually do → become the seeded template library and spike payloads
 - [ ] Apple ID ready; check iOS ≥17 / watchOS ≥10 on your devices
+- [ ] **Start Apple Developer Program enrollment ($99/yr)** — needed for CloudKit and to avoid 7-day provisioning expiry; enrollment can take days
 - [ ] Apply for Garmin Connect Developer Program (for v2 sync)
+- [ ] Create an Intervals.icu account + API key (B3 fallback bridge)
 - [ ] Create the dedicated `training-app` repository
 
 ## Risks & watch items
@@ -184,6 +190,8 @@ Garmin/Strava inbound sync (apply for **Garmin developer program during Phase A*
 |---|---|
 | WorkoutKit behaves differently on-device than documented | Spike B2 before any UI; mapping layer isolates changes |
 | FIT encoding rejected by Garmin/Karoo firmware | Spike B3 with real devices; fixtures from your own units |
+| **No manual workout-import path on Garmin watch / Karoo firmware** | B3 verifies paths first; Intervals.icu API bridge as fallback; Garmin API (v2) is the durable fix |
+| Free Apple account limits (no CloudKit, 7-day provisioning expiry) | Paid membership on Mac-day (start enrollment earlier); local-only persistence until then |
 | FIT decoder scope creep (format is huge) | Subset decoding, skip-unknown policy, fixtures define "enough" |
 | SwiftData/CloudKit friction with value-type domain model | Domain stays plain Swift; persistence is an adapter layer only |
 | Solo timeline slips | Milestones are independently shippable; M1 slice always demoable |
@@ -196,3 +204,18 @@ Garmin/Strava inbound sync (apply for **Garmin developer program during Phase A*
 | B: scaffold + 2 spikes | ~2 days | Yes |
 | C: M1–M7 app build-out | ~6 weeks part-time | Yes |
 | **Total to MVP acceptance** | **~8–9 weeks from today** | |
+
+---
+
+## Review findings (v1 → v1.1, 2026-07-11)
+
+Self-review against the spec and real-world constraints. Four defects found and fixed:
+
+1. **B1 was unbuildable as written (blocker):** it paired "CloudKit-enabled container" with "personal team signing" — a free Apple account cannot use CloudKit, and its provisioning expires every 7 days, which is unusable for a daily-training app. Fixed: local-only persistence at scaffold time, paid membership on Mac-day (start enrollment earlier), CloudKit as a post-enrollment task. Spec §2 annotated accordingly.
+2. **B3 overstated the import paths:** Garmin Connect does not import structured-workout FIT files, and Karoo manual import varies by firmware. Fixed: B3 now verifies paths first and carries an Intervals.icu-API bridge as fallback; new risk row added.
+3. **A5's "substituted" classification quietly depended on post-MVP work:** judging "matched but different structure" per-step requires interval detection, which is post-MVP roadmap item #1. Fixed: MVP classifier uses coarse similarity (sport + duration/load) with an API shaped for the later upgrade.
+4. **Phase A DoD referenced a `demo` executable that wasn't in the package layout.** Fixed.
+
+Also checked, no change needed: every spec §3–§8 feature traces to a Phase A/C task;
+the M1/M2 week-3 overlap is intentional (builder UI reuses the slice's plumbing);
+acceptance criteria §10 all land in M7; post-MVP ordering matches spec §9.
