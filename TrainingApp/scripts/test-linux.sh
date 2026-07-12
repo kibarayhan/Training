@@ -54,6 +54,11 @@ case "${1:-all}" in
     sync)
         build_lib TrainingSync
         run_tests TrainingSyncTests TrainingCore TrainingSync ;;
+    appcore)
+        build_lib TrainingFIT
+        build_lib TrainingSync
+        build_lib TrainingAppCore
+        run_tests TrainingAppCoreTests TrainingCore TrainingFIT TrainingSync TrainingAppCore ;;
     demo)
         build_lib TrainingFIT
         build_lib TrainingSync
@@ -61,8 +66,10 @@ case "${1:-all}" in
     all)
         build_lib TrainingFIT
         build_lib TrainingSync
+        build_lib TrainingAppCore
         run_tests TrainingCoreTests TrainingCore
         run_tests TrainingFITTests TrainingCore TrainingFIT
-        run_tests TrainingSyncTests TrainingCore TrainingSync ;;
-    *) echo "usage: $0 [core|fit|sync|all|demo]"; exit 2 ;;
+        run_tests TrainingSyncTests TrainingCore TrainingSync
+        run_tests TrainingAppCoreTests TrainingCore TrainingFIT TrainingSync TrainingAppCore ;;
+    *) echo "usage: $0 [core|fit|sync|appcore|all|demo]"; exit 2 ;;
 esac
