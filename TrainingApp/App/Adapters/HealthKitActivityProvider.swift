@@ -35,43 +35,39 @@ public final class HealthKitActivityProvider: ActivityProvider {
         try await store.requestAuthorization(toShare: [], read: readTypes)
     }
 
-    /// ActivityProvider is synchronous, but HealthKit is async; bridge with a
-    /// semaphore. Callers invoke this off the main thread (the model's refresh
-    /// runs in a Task).
+    /// ActivityProvider is synchronous by design (keeps the model simple and
+    /// testable). HealthKit's queries are completion-handler based and run on
+    /// HealthKit's own internal queue, so we bridge with plain semaphores — no
+    /// `Task`, so nothing blocks the Swift-concurrency cooperative pool. The
+    /// model calls this from a background DispatchQueue, never the main actor.
     public func fetchActivities(since: Date?) throws -> [Activity] {
-        var result: Result<[Activity], Error>!
-        let semaphore = DispatchSemaphore(value: 0)
-        Task {
-            do { result = .success(try await fetchAsync(since: since)) }
-            catch { result = .failure(error) }
-            semaphore.signal()
-        }
-        semaphore.wait()
-        return try result.get()
-    }
-
-    private func fetchAsync(since: Date?) async throws -> [Activity] {
-        let predicate: NSPredicate? = since.map {
-            HKQuery.predicateForSamples(withStart: $0, end: nil, options: .strictStartDate)
-        }
-        let workouts = try await withCheckedThrowingContinuation { (cont: CheckedContinuation<[HKWorkout], Error>) in
-            let query = HKSampleQuery(
-                sampleType: .workoutType(), predicate: predicate,
-                limit: HKObjectQueryNoLimit,
-                sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
-            ) { _, samples, error in
-                if let error { cont.resume(throwing: error) }
-                else { cont.resume(returning: (samples as? [HKWorkout]) ?? []) }
-            }
-            store.execute(query)
-        }
-
+        let workouts = try fetchWorkouts(since: since)
         var activities: [Activity] = []
         for workout in workouts {
             guard let sport = Self.sport(from: workout.workoutActivityType) else { continue }
-            activities.append(await activity(from: workout, sport: sport))
+            activities.append(activity(from: workout, sport: sport))
         }
         return activities
+    }
+
+    private func fetchWorkouts(since: Date?) throws -> [HKWorkout] {
+        let predicate: NSPredicate? = since.map {
+            HKQuery.predicateForSamples(withStart: $0, end: nil, options: .strictStartDate)
+        }
+        var outcome: Result<[HKWorkout], Error> = .success([])
+        let semaphore = DispatchSemaphore(value: 0)
+        let query = HKSampleQuery(
+            sampleType: .workoutType(), predicate: predicate,
+            limit: HKObjectQueryNoLimit,
+            sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
+        ) { _, samples, error in
+            if let error { outcome = .failure(error) }
+            else { outcome = .success((samples as? [HKWorkout]) ?? []) }
+            semaphore.signal()
+        }
+        store.execute(query)
+        semaphore.wait()
+        return try outcome.get()
     }
 
     private static func sport(from type: HKWorkoutActivityType) -> Sport? {
@@ -82,11 +78,11 @@ public final class HealthKitActivityProvider: ActivityProvider {
         }
     }
 
-    private func activity(from workout: HKWorkout, sport: Sport) async -> Activity {
+    private func activity(from workout: HKWorkout, sport: Sport) -> Activity {
         let power = sport == .ride ? HKQuantityType.quantityType(forIdentifier: .cyclingPower)
                                    : HKQuantityType.quantityType(forIdentifier: .runningPower)
-        let avgPower = await averageQuantity(power, in: workout, unit: .watt())
-        let avgHR = await averageQuantity(
+        let avgPower = averageQuantity(power, in: workout, unit: .watt())
+        let avgHR = averageQuantity(
             HKQuantityType.quantityType(forIdentifier: .heartRate), in: workout,
             unit: HKUnit.count().unitDivided(by: .minute()))
 
@@ -112,18 +108,21 @@ public final class HealthKitActivityProvider: ActivityProvider {
     }
 
     private func averageQuantity(_ type: HKQuantityType?, in workout: HKWorkout,
-                                 unit: HKUnit) async -> Double? {
+                                 unit: HKUnit) -> Double? {
         guard let type else { return nil }
-        return await withCheckedContinuation { (cont: CheckedContinuation<Double?, Never>) in
-            let predicate = HKQuery.predicateForObjects(from: workout)
-            let query = HKStatisticsQuery(
-                quantityType: type, quantitySamplePredicate: predicate,
-                options: .discreteAverage
-            ) { _, stats, _ in
-                cont.resume(returning: stats?.averageQuantity()?.doubleValue(for: unit))
-            }
-            store.execute(query)
+        var value: Double?
+        let semaphore = DispatchSemaphore(value: 0)
+        let predicate = HKQuery.predicateForObjects(from: workout)
+        let query = HKStatisticsQuery(
+            quantityType: type, quantitySamplePredicate: predicate,
+            options: .discreteAverage
+        ) { _, stats, _ in
+            value = stats?.averageQuantity()?.doubleValue(for: unit)
+            semaphore.signal()
         }
+        store.execute(query)
+        semaphore.wait()
+        return value
     }
 }
 #endif

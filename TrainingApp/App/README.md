@@ -29,9 +29,20 @@ Treat every file here as a first draft to compile, run, and fix on device.
    `HealthKitActivityProvider` — `.cyclingPower`, `.runningSpeed`, average
    statistics options; validate against real `HKWorkout` data.
 3. **Swift Charts marks** in `DashboardScreen` — dashed projected segments.
-4. The synchronous-over-async semaphore bridge in `HealthKitActivityProvider`
-   (ActivityProvider is sync; HealthKit is async) — confirm it doesn't deadlock
-   on the main actor; the model calls `refreshActivities()` from a background Task.
+4. `HealthKitActivityProvider` uses plain semaphores over HealthKit's
+   completion-handler queue (no `Task`, so no cooperative-pool blocking).
+   Confirm the model calls `refreshActivities()` from a background
+   `DispatchQueue`, never the main actor, or the semaphore waits will stall
+   the UI.
+
+## Review status
+
+C1 was code-reviewed (reading only). Fixes applied: qualified the ambiguous
+`WorkoutScheduler` name (WorkoutKit class vs our protocol), replaced a
+dead `NavigationLink`-in-`Menu` with a sheet, surfaced the Watch-sync mapping
+notes in an alert, removed the `Task`-based semaphore bridge, and dropped a
+redundant `try? … ?? nil`. Remaining uncertainty is the WorkoutKit initializer
+API surface — unverifiable without the SDK.
 
 ## Guardrail
 

@@ -13,14 +13,14 @@ import TrainingAppCore
 /// UNVERIFIED: written without a Mac. Spike B2 must confirm the goal/alert
 /// initializers below match the shipping WorkoutKit API (they have shifted
 /// across betas) and that scheduling round-trips through the Watch.
-public final class WorkoutKitScheduler: WorkoutScheduler {
-
-    private let store = WorkoutScheduler.shared
+// `WorkoutScheduler` is exported by BOTH WorkoutKit (a class) and
+// TrainingAppCore (our protocol), so every use must be qualified.
+public final class WorkoutKitScheduler: TrainingAppCore.WorkoutScheduler {
 
     public init() {}
 
     public func requestAuthorization() async -> Bool {
-        await WorkoutScheduler.shared.requestAuthorization() == .authorized
+        await WorkoutKit.WorkoutScheduler.shared.requestAuthorization() == .authorized
     }
 
     // TrainingAppCore tracks which plannedIDs are synced in its own state;
@@ -33,7 +33,7 @@ public final class WorkoutKitScheduler: WorkoutScheduler {
         let custom = Self.customWorkout(from: mapped)
         let plan = WorkoutPlan(.custom(custom))
         Task {
-            try? await WorkoutScheduler.shared.schedule(plan, at: nil)
+            try? await WorkoutKit.WorkoutScheduler.shared.schedule(plan, at: nil)
         }
         syncedIDs.insert(id)
     }

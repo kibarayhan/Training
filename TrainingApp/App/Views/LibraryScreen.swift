@@ -13,6 +13,7 @@ struct LibraryScreen: View {
     @State private var search = ""
     @State private var sportFilter: Sport?
     @State private var showingImporter = false
+    @State private var showingBuilder = false
     @State private var exportURL: ExportDocument?
 
     private var results: [WorkoutTemplate] {
@@ -45,11 +46,17 @@ struct LibraryScreen: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
+                    // A NavigationLink inside a Menu is a dead pattern (the menu
+                    // dismisses without pushing), so present the builder as a
+                    // sheet from a plain Button instead.
                     Menu {
-                        NavigationLink("New workout") { WorkoutBuilderView() }
+                        Button("New workout") { showingBuilder = true }
                         Button("Import FIT…") { showingImporter = true }
                     } label: { Image(systemName: "plus") }
                 }
+            }
+            .sheet(isPresented: $showingBuilder) {
+                NavigationStack { WorkoutBuilderView() }
             }
             .fileImporter(isPresented: $showingImporter,
                           allowedContentTypes: [UTType(filenameExtension: "fit") ?? .data]) { result in
@@ -62,7 +69,7 @@ struct LibraryScreen: View {
     }
 
     private func export(_ template: WorkoutTemplate) {
-        guard let data = try? app.model.exportFIT(templateID: template.id) ?? nil else { return }
+        guard let data = try? app.model.exportFIT(templateID: template.id) else { return }
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(template.name).fit")
         try? data.write(to: url)

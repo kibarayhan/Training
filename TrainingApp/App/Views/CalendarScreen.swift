@@ -13,6 +13,7 @@ struct CalendarScreen: View {
     @State private var weekAnchor = Date()
     @State private var pickingTemplateFor: Date?
     @State private var syncNotes: [MappingNote] = []
+    @State private var showingSyncResult = false
 
     private var days: [Date] {
         let start = TrainingAppModel.isoWeekStart(of: weekAnchor)
@@ -64,7 +65,28 @@ struct CalendarScreen: View {
                     pickingTemplateFor = nil
                 }
             }
+            .alert("Synced to Watch", isPresented: $showingSyncResult) {
+                Button("OK") {}
+            } message: {
+                if syncNotes.isEmpty {
+                    Text("All workouts synced with full targets.")
+                } else {
+                    // Some targets can't alert on the Watch (RPE, unresolvable
+                    // percent, etc.) — tell the athlete so it isn't a surprise.
+                    Text(syncSummary(syncNotes))
+                }
+            }
         }
+    }
+
+    private func syncSummary(_ notes: [MappingNote]) -> String {
+        let kinds = Set(notes.map(\.kind))
+        var lines = ["\(notes.count) step(s) synced without a device alert:"]
+        if kinds.contains(.rpeHasNoDeviceAlert) { lines.append("• RPE targets (shown as notes only)") }
+        if kinds.contains(.unresolvableTarget) { lines.append("• targets needing a threshold you haven't set") }
+        if kinds.contains(.topZoneClamped) { lines.append("• top-zone efforts (capped range)") }
+        if kinds.contains(.cadencePercentUnsupported) { lines.append("• percentage cadence targets") }
+        return lines.joined(separator: "\n")
     }
 
     private func shiftWeek(_ delta: Int) {
@@ -75,6 +97,7 @@ struct CalendarScreen: View {
         #if canImport(WorkoutKit)
         let scheduler = WorkoutKitScheduler()
         syncNotes = (try? app.model.applySync(to: scheduler)) ?? []
+        showingSyncResult = true
         #endif
     }
 }
