@@ -60,6 +60,10 @@ public final class TrainingAppModel {
 
     public var zoneSettings: ZoneSettings { state.zones }
 
+    /// Read-only snapshot of the threshold history, for estimate previews in
+    /// the builder (which works on an unsaved draft, not the stored state).
+    public var thresholdStoreSnapshot: ThresholdStore { state.thresholds }
+
     public func setZoneModel(_ model: ZoneModel, sport: Sport, kind: TargetKind) {
         state.zones.set(model, sport: sport, kind: kind)
         persist()
